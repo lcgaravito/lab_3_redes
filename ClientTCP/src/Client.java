@@ -6,10 +6,13 @@ import java.net.Socket;
 public class Client {
 	
 	public final static int PORT = 35000;
+	
+	public final static String NAME_FILE = "recetas.txt";
 
 	public static void main(String[] args) {
 		Client client = new Client();
-		client.pedir("./data/recetas.txt", "localhost", PORT);
+		// client.pedir("/home/ubuntu/lab_3_redes/ServerTCP/data/recetas.txt", "52.37.186.233", PORT);
+		client.pedir("../data/" + NAME_FILE, "52.37.186.233", PORT);
 	}
 	
 	public void pedir(String name, String server, int port) {
@@ -21,7 +24,8 @@ public class Client {
 			request.nameFile = name;
 			oos.writeObject(request);
 			
-			FileOutputStream fos = new FileOutputStream(request.nameFile);
+			// FileOutputStream fos = new FileOutputStream(request.nameFile);
+			FileOutputStream fos = new FileOutputStream("./data/" + NAME_FILE);
 			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 			
 			Response response;
