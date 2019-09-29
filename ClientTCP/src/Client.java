@@ -11,8 +11,8 @@ public class Client {
 
 	public static void main(String[] args) {
 		Client client = new Client();
-		// client.pedir("/home/ubuntu/lab_3_redes/ServerTCP/data/recetas.txt", "52.37.186.233", PORT);
-		client.pedir("../data/" + NAME_FILE, "52.37.186.233", PORT);
+		// client.pedir("../data/" + NAME_FILE, "52.37.186.233", PORT);		// Produccion
+		client.pedir("./data/" + NAME_FILE, "localhost", PORT);				// Desarrollo
 	}
 	
 	public void pedir(String name, String server, int port) {
