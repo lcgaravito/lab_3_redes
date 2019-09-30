@@ -1,7 +1,12 @@
+import java.io.BufferedReader;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Client {
 	
@@ -20,6 +25,19 @@ public class Client {
 		{
 			Socket socket = new Socket(server, port);
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+			BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			PrintWriter pwt = new PrintWriter(socket.getOutputStream(), true);
+			
+			System.out.println("Enviando PETICION");
+			pwt.println("PETICION"); // Se solicita la conexion
+			String peticionResponse = bfr.readLine();
+			System.out.println(peticionResponse); // CONEXION ESTABLECIDA
+			
+			System.out.println("Notificando PREPARADO");
+			pwt.println("PREPARADO"); // Se notifica que esta preparado para recibir archivos
+			peticionResponse = bfr.readLine();
+			System.out.println(peticionResponse); // SERVER_PREPARADO
+			
 			Request request = new Request();
 			request.nameFile = name;
 			oos.writeObject(request);
@@ -36,8 +54,11 @@ public class Client {
 				if(aux instanceof Response)
 				{
 					response = (Response) aux;
-					System.out.println("\n#Log#");
-					System.out.println(new String(response.fileContent, 0, response.validBytes));
+					System.out.println();
+					System.out.println("Status de la conexión: ACTIVA");
+					// System.out.println(new String(response.fileContent, 0, response.validBytes));
+					System.out.println("Nombre del archivo: " + response.nameFile);
+					System.out.println("¿Último mensaje?: " + response.lastMessage);
 					fos.write(response.fileContent, 0, response.validBytes);
 				}
 				else
@@ -47,7 +68,12 @@ public class Client {
 				}
 			}
 			while(!response.lastMessage);
+
+			System.out.println("\nTransferencia terminada");
+			System.out.println("Ruta del archivo: ./data/" + NAME_FILE);
 			
+			bfr.close();
+			pwt.close();
 			fos.close();
 			ois.close();
 			socket.close();

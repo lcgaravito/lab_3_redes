@@ -22,7 +22,7 @@ public class Server {
 			while(true)
 			{
 				Socket client = serverSocket.accept();
-				System.out.println("Client accepted!");
+				System.out.println("Client accepted! IP: " + client.getInetAddress().getHostAddress());
 				ProtocoloThread newThread = new ProtocoloThread(client);
 				newThread.start();
 			}
